@@ -34,9 +34,22 @@ function createFeatures(earthquakeData){
         default: 
             return "#DAF7A6";
         }
-    }
+    };
 
+    var earthquakes = L.geoJSON(earthquakeData, {
+        pointToLayer: function(earthquakeData, latlng){
+            return L.circle(latlng, {
+                radius: markerSize(earthquakeData.properties.mag), 
+                color: circleColor(earthquakeData.properties.mag)
+            });
+        },
+        onEachFeature: onEachFeature
+    });
+    
+    createMap(earthquakes);
 }
+
+function createMap(earthquakes){
 
 // set tile layer for the map 
 var streetMap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -53,3 +66,5 @@ var streetMap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}
       layer: [streetMap]
   });
 
+  earthquakes.addto(myMap);
+}
