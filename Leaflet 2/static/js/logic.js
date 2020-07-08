@@ -1,6 +1,6 @@
 // Set variable for the data
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
-var faultLines = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundries.json";
+// var faultLines = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundries.json";
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
   //response
