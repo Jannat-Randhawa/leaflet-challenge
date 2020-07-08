@@ -1,6 +1,6 @@
 // Set variable for the data
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
-// var faultLines = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundries.json";
+var faultlinesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_plates.json";
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
   //response
@@ -74,10 +74,10 @@ function createMap(earthquakes) {
     accessToken: API_KEY
   });
 
-  var darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+  var outdoors = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
     maxZoom: 18,
-    id: "mapbox/dark-v10",
+    id: "mapbox/outdoors-v11",
     accessToken: API_KEY
   });
 
@@ -87,7 +87,7 @@ function createMap(earthquakes) {
   // BaseMaps object for base layers
   var baseMaps = {
     "Street Map": grayscaleMap,
-    "Dark Map": darkmap, 
+    "Out doors": outdoors, 
     "Satellite Map": satelliteMap
   };
 
@@ -97,13 +97,13 @@ function createMap(earthquakes) {
     FaultLines: faultLines
   };
 
-  var faultlinesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
+  // var faultlinesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
 
   d3.json(faultlinesUrl, function(data) {
     console.log(data);
     L.geoJSON(data, {
       style: function() {
-        return {color: "orange", fillOpacity: 0}
+        return {color: "Green", fillOpacity: 0}
       }
     }).addTo(faultLines)
     faultLines.addTo(myMap);
