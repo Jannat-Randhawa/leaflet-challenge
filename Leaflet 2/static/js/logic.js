@@ -97,15 +97,17 @@ function createMap(earthquakes) {
     FaultLines: faultLines
   };
 
-  var faultlinesUrl = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundaries.json";
+  var faultlinesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
 
   d3.json(faultlinesUrl, function(data) {
+    console.log(data);
     L.geoJSON(data, {
       style: function() {
         return {color: "orange", fillOpacity: 0}
       }
     }).addTo(faultLines)
-  })
+    faultLines.addTo(myMap);
+  });
 
   // Set My map variable to hold all the objects
   var myMap = L.map("map", {
