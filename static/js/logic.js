@@ -1,25 +1,26 @@
+// Set variable for the data
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
-  // Once we get a response, send the data.features object to the createFeatures function
+  //response
   createFeatures(data.features);
 });
-
+// create a create features functions 
 function createFeatures(earthquakeData) {
 
-  // Define a function we want to run once for each feature in the features array
-  // Give each feature a popup describing the place and time of the earthquake
+  // OnEachFeature with a pop up with information about the earthquake and location. 
   function onEachFeature(feature, layer) {
     layer.bindPopup("<h4>Location: " + feature.properties.place + 
     "</h4><hr><p>Date & Time: " + new Date(feature.properties.time) + 
     "</p><hr><p>Magnitude: " + feature.properties.mag + "</p>");
   }
 
+// Create a function for circle radius based on the magnitude of the earthquake. 
   function circleRadius(magnitude){
-      return magnitude * 10000; 
+      return magnitude * 20000; 
   }
-
+// Create a function for circle color based on the magnitude of the earthquake. 
   function circleColor(magnitude){
     switch (true) {
         case magnitude > 5:
