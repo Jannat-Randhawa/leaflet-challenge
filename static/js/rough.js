@@ -210,3 +210,12 @@ function createMap(earthquakes) {
   }).addTo(myMap);
 }
 
+//=============================================
+function getColor(d) {
+    return d > 5  ? '#800026' :
+           d > 4  ? '#BD0026' :
+           d > 3  ? "#E31A1C" :
+           d > 2  ? '#FC4E2A' :
+           d > 1  ? '#FD8D3C' :
+                      "#FFEDA0";
+}

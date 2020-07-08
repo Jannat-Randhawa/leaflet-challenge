@@ -1,5 +1,4 @@
-var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2014-01-01&endtime=" +
-  "2014-01-02&maxlongitude=-69.52148437&minlongitude=-123.83789062&maxlatitude=48.74894534&minlatitude=25.16517337";
+var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
@@ -18,21 +17,21 @@ function createFeatures(earthquakeData) {
   }
 
   function circleRadius(magnitude){
-      return magnitude * 20000; 
+      return magnitude * 10000; 
   }
 
   function circleColor(magnitude){
     switch (true) {
         case magnitude > 5:
-            return '#800026';
+            return "#800026";
         case magnitude > 4:
-            return '#BD0026';
+            return "#BD0026";
         case magnitude > 3:
             return "#E31A1C";
         case magnitude > 2:
-            return '#FC4E2A';
+            return "#FC4E2A";
         case magnitude > 1:
-            return '#FD8D3C';
+            return "#FD8D3C";
         default:
             return "#FFEDA0";
         }
@@ -84,7 +83,38 @@ function createMap(earthquakes) {
     layers: [grayscaleMap, earthquakes]
   });
 
+  function circleColor(magnitude){
+    switch (true) {
+        case magnitude > 5:
+            return '#800026';
+        case magnitude > 4:
+            return '#BD0026';
+        case magnitude > 3:
+            return "#E31A1C";
+        case magnitude > 2:
+            return '#FC4E2A';
+        case magnitude > 1:
+            return '#FD8D3C';
+        default:
+            return "#FFEDA0";
+        }
+  }
+var legend = L.control({ position: "bottomright" });
+    legend.onAdd = function() {
+        var div = L.DomUtil.create("div", "info legend"), 
+        magLevels = [0, 1, 2, 3, 4, 5];
 
+        div.innerHTML += "<h3>Magnitude</h3>"
+
+        for (var i = 0; i < magLevels.length; i++) {
+            div.innerHTML +=
+                '<i class="rect" style="background: ' + circleColor( magLevels[i] + 1) + '"></i> ' +
+                magLevels[i] + ( magLevels[i + 1] ? '&ndash;' +  magLevels[i + 1] + '<br>' : '+');
+        }
+        return div;
+    };
+    // Add Legend to the Map
+    legend.addTo(myMap);
   // Create a layer control
   // Pass in our baseMaps and overlayMaps
   // Add the layer control to the map
