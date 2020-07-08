@@ -1,6 +1,6 @@
 // Set variable for the data
 var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
-
+var faultLines = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundries.json";
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
   //response
@@ -65,17 +65,47 @@ function createMap(earthquakes) {
     maxZoom: 18,
     id: "mapbox/light-v10",
     accessToken: API_KEY
-});
+  });
 
+  var satelliteMap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "mapbox/satellite-v9",
+    accessToken: API_KEY
+  });
+
+  var darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "mapbox/dark-v10",
+    accessToken: API_KEY
+  });
+
+// set variable for the fault layers 
+  var faultLines = new L.LayerGroup();
+  
   // BaseMaps object for base layers
   var baseMaps = {
     "Street Map": grayscaleMap,
+    "Dark Map": darkmap, 
+    "Satellite Map": satelliteMap
   };
 
   // overlay object for the  overlay layer
   var overlayMaps = {
-    Earthquakes: earthquakes
+    Earthquakes: earthquakes, 
+    FaultLines: faultLines
   };
+
+  var faultlinesUrl = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundaries.json";
+
+  d3.json(faultlinesUrl, function(data) {
+    L.geoJSON(data, {
+      style: function() {
+        return {color: "orange", fillOpacity: 0}
+      }
+    }).addTo(faultLines)
+  })
 
   // Set My map variable to hold all the objects
   var myMap = L.map("map", {
@@ -83,9 +113,9 @@ function createMap(earthquakes) {
       37.09, -95.71
     ],
     zoom: 5,
-    layers: [grayscaleMap, earthquakes]
+    layers: [grayscaleMap, earthquakes, faultLines]
   });
-
+  
   // redefine the circle color function for the Legend. 
   function circleColor(magnitude){
     switch (true) {
@@ -122,7 +152,7 @@ var legend = L.control({ position: "bottomright" });
     // Put legend in the map
     legend.addTo(myMap);
 
-  L.control.layers(baseMaps, overlayMaps, {
-    collapsed: false
-  }).addTo(myMap);
-}
+    L.control.layers(baseMaps, overlayMaps, {
+      collapsed: false
+    }).addTo(myMap);
+};
