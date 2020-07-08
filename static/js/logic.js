@@ -37,8 +37,8 @@ function createFeatures(earthquakeData) {
             return "#FFEDA0";
         }
   }
-  // Create a GeoJSON layer containing the features array on the earthquakeData object
-  // Run the onEachFeature function once for each piece of data in the array
+  // GeoJSON layer containing features for the earthquakeData. 
+  // circle markers for the map.
   var earthquakes = L.geoJSON(earthquakeData, {
     pointToLayer: function (earthquakeData, latlng){
         return L.circle(latlng, {
@@ -51,10 +51,11 @@ function createFeatures(earthquakeData) {
     onEachFeature: onEachFeature
   });
 
-  // Sending our earthquakes layer to the createMap function
+  // Send the feature to the createMap layer. 
   createMap(earthquakes);
 }
 
+// Function for the createmap. 
 function createMap(earthquakes) {
 
   // Define streetmap and darkmap layers
@@ -65,17 +66,17 @@ function createMap(earthquakes) {
     accessToken: API_KEY
 });
 
-  // Define a baseMaps object to hold our base layers
+  // BaseMaps object for base layers
   var baseMaps = {
     "Street Map": grayscaleMap,
   };
 
-  // Create overlay object to hold our overlay layer
+  // overlay object for the  overlay layer
   var overlayMaps = {
     Earthquakes: earthquakes
   };
 
-  // Create our map, giving it the streetmap and earthquakes layers to display on load
+  // Set My map variable to hold all the objects
   var myMap = L.map("map", {
     center: [
       37.09, -95.71
@@ -84,6 +85,7 @@ function createMap(earthquakes) {
     layers: [grayscaleMap, earthquakes]
   });
 
+  // redefine the circle color function for the Legend. 
   function circleColor(magnitude){
     switch (true) {
         case magnitude > 5:
@@ -100,6 +102,8 @@ function createMap(earthquakes) {
             return "#FFEDA0";
         }
   }
+
+// Set object for the legend. 
 var legend = L.control({ position: "bottomright" });
     legend.onAdd = function() {
         var div = L.DomUtil.create("div", "info legend"), 
@@ -114,11 +118,9 @@ var legend = L.control({ position: "bottomright" });
         }
         return div;
     };
-    // Add Legend to the Map
+    // Put legend in the map
     legend.addTo(myMap);
-  // Create a layer control
-  // Pass in our baseMaps and overlayMaps
-  // Add the layer control to the map
+
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
